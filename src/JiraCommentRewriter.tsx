@@ -78,58 +78,53 @@ Text to rewrite: "${inputText}"`;
   };
 
   const callClaudeAPI = async (): Promise<string> => {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://jira-rewriter-adapter-yashtejwani00s-projects.vercel.app/api/rewrite", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "x-api-key": claudeApiKey,
-        "anthropic-version": "2023-06-01"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "claude-3-5-sonnet-20241022",
-        max_tokens: 1000,
-        messages: [
-          {
-            role: "user",
-            content: getPrompt()
-          }
-        ]
+        provider: 'claude',
+        apiKey: claudeApiKey,
+        prompt: getPrompt()
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
+      throw new Error(`Adapter error: ${response.status}`);
     }
 
     const data = await response.json();
-    return data.content[0].text;
+    if (!data.success) {
+      throw new Error(data.error);
+    }
+    
+    return data.result;
   };
 
   const callOpenAIAPI = async (): Promise<string> => {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://jira-rewriter-adapter-yashtejwani00s-projects.vercel.app/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${openaiApiKey}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "user",
-            content: getPrompt()
-          }
-        ],
-        max_tokens: 1000
+        provider: 'openai',
+        apiKey: openaiApiKey,
+        prompt: getPrompt()
       })
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      throw new Error(`Adapter error: ${response.status}`);
     }
 
     const data = await response.json();
-    return data.choices[0].message.content;
+    if (!data.success) {
+      throw new Error(data.error);
+    }
+    
+    return data.result;
   };
 
   const handleRewrite = async (): Promise<void> => {
