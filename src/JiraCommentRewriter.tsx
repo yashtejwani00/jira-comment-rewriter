@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Settings, Copy, Check, AlertCircle, Wand2 } from 'lucide-react';
+import { Settings, Copy, Check, AlertCircle, Wand2 } from 'lucide-react';
 
-interface Settings {
+interface AppSettings {
   claudeApiKey: string;
   openaiApiKey: string;
   selectedModel: 'claude' | 'openai';
@@ -30,7 +30,7 @@ const JiraCommentRewriter: React.FC = () => {
   useEffect(() => {
     const savedSettings = localStorage.getItem('jiraRewriterSettings');
     if (savedSettings) {
-      const settings: Settings = JSON.parse(savedSettings);
+      const settings: AppSettings = JSON.parse(savedSettings);
       setClaudeApiKey(settings.claudeApiKey || '');
       setOpenaiApiKey(settings.openaiApiKey || '');
       setSelectedModel(settings.selectedModel || 'claude');
@@ -41,7 +41,7 @@ const JiraCommentRewriter: React.FC = () => {
 
   // Save settings to localStorage automatically
   useEffect(() => {
-    const settings: Settings = {
+    const settings: AppSettings = {
       claudeApiKey,
       openaiApiKey,
       selectedModel,
