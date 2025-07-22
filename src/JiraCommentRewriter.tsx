@@ -78,7 +78,11 @@ Text to rewrite: "${inputText}"`;
   };
 
   const callClaudeAPI = async (): Promise<string> => {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    // Use CORS proxy for GitHub Pages deployment
+    const corsProxy = "https://api.allorigins.win/raw?url=";
+    const apiUrl = "https://api.anthropic.com/v1/messages";
+    
+    const response = await fetch(corsProxy + encodeURIComponent(apiUrl), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +110,11 @@ Text to rewrite: "${inputText}"`;
   };
 
   const callOpenAIAPI = async (): Promise<string> => {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    // Use CORS proxy for GitHub Pages deployment
+    const corsProxy = "https://api.allorigins.win/raw?url=";
+    const apiUrl = "https://api.openai.com/v1/chat/completions";
+    
+    const response = await fetch(corsProxy + encodeURIComponent(apiUrl), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
